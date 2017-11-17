@@ -1,0 +1,52 @@
+Translation of XPCoin/doc/building novacoind and novacoinqt under Linux.txt
+ 
+Build for Linux
+If you prefer to compile your own binary files, then you need the developer packages:
+
+Ubuntu/Debian:
+ sudo apt-get install git qt4-qmake libqt4-dev build-essential libboost-dev libboost-system-dev
+   libboost-filesystem-dev libboost-program-options-dev libboost-thread-dev
+   libssl-dev libdb++-dev libqrencode-dev
+   
+If you have an error installing qt4-qmake (Arises on Ubuntu 14.04.2 and possibly in other versions)
+libcheese-gtk23 : Depends: libclutter-gtk-1.0-0 (>= 0.91.8) but it is not going to be installed
+                  Depends: libcogl15 (>= 1.15.8) but it is not going to be installed
+libcheese7 : Depends: libclutter-gst-2.0-0 (>= 0.10.0) but it is not going to be installed
+             Depends: gstreamer1.0-clutter but it is not going to be installed
+libclutter-1.0-0 : Depends: libcogl-pango15 (>= 1.15.8) but it is not going to be installed
+                   Depends: libcogl15 (>= 1.15.8) but it is not going to be installed
+
+Then enter
+
+sudo apt-get install  libglew-dev libcheese7 libcheese-gtk23 libclutter-gst-2.0-0 libcogl15 libclutter-gtk-1.0-0 libclutter-1.0-0  xserver-xorg-input-all
+
+openSUSE (verified on version 13.2):
+ sudo zypper install git gcc gcc-c++ libqt4-devel boost-devel libopenssl-devel libdb-4_8-devel libqrencode3
+
+After the installation was completed, you can clone the XP repository:
+
+ git clone https://github.com/XP-project/XP.git
+
+and finally, compile your client:
+
+ cd XP
+ qmake USE_O3=1 USE_ASM=1 (if you want to use LevelDB include USE_LEVELDB=1)  
+ make
+ cd src
+ make -f makefile.unix USE_O3=1 USE_ASM=1 (again, if using LevelDB include USE_LEVELDB=1) 
+ strip XPd      
+
+The commands above compile binary files with dynamic linking, if you want with static linking and your distribution contains static libraries (.a, not .so), then add:
+-in the qmake command:
+ RELEASE=1         
+-in the make -f makefile.unix command:
+ STATIC=1
+
+If you want to reduce the size of binary files,
+1) Go to the website http://upx.sourceforge.net/#downloadupx
+2) Download the program according to your system
+3) Unpack the program in a folder with binary XP files.
+4) Enter in the terminal:
+  ./upx -9 XPd
+  then
+  ./upx -9 XP-qt
